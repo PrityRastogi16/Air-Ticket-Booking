@@ -57,7 +57,7 @@ flightRouter.delete("/delete/:id",auth, async(req,res)=>{
     }
     catch(err){
         console.log(err);
-        res.status(401).send({msg:"Error:err"})
+        res.status(401).send({msg:"Flight Deleted"})
     }
 })
 
