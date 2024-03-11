@@ -1,12 +1,16 @@
 const express = require("express");
 const {connection} = require("./db")
+const {userRouter} = require("./routes/user.routes");
+const {flightRouter} = require("./routes/flight.routes");
 const app = express()
 app.use(express.json());
+
 
 app.get("/",(req,res)=>{
     res.send("Working fine")
 })
-
+app.use("/user", userRouter);
+app.use("/flight", flightRouter);
 app.listen("2001",async(req,res)=>{
     try{
         await connection
