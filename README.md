@@ -1,6 +1,6 @@
 # Air-Ticket-Booking
 
-**API End Points:**
+## API End Points:
 # /user/register -
     This endpoint is used to register a new user. Upon successful registration, it returns a JSON response with a status code of 201.
 Request Body
