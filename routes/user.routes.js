@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const {UserModel} = require("../models/user.model");
 const userRouter = express.Router();
 
+
+
 // Registration
 userRouter.post("/register", async(req,res)=>{
     const {name, email, password} = req.body;
@@ -28,25 +30,31 @@ userRouter.post("/register", async(req,res)=>{
 
 
 // Login
-userRouter.post("/login", async(req, res)=>{
-    const {email, password} = req.body;
-    try{
-       const user = await UserModel.find({email});
-       bcrypt.compare(password, user.password, (err, result)=>{
-        if(result){
-            const token = jwt.sign({userID:user._id,user:user.name}, "prits")
-            res.status(201).json({msg:"Login Successfull", user, token})
-        }else{
-            console.log(err);
-            res.status(401).json({msg:"Invalid Email or Password"})
+userRouter.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await UserModel.findOne({ email });
+        if (user) {
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    res.status(401).json({ msg: "Invalid Email or Password" });
+                }
+                if (result) {
+                    const token = jwt.sign({ userID: user._id }, "prits");
+                    res.status(201).json({ msg: "Login Successful", user, token });
+                } else {
+                    res.status(401).json({ msg: "Invalid Email or Password" });
+                }
+            });
+        } else {
+            res.status(401).json({ msg: "Invalid Email or Password" });
         }
-       })
-    }
-    catch(err){
+    } catch (err) {
         console.log(err);
-        res.status(401).json({msg:"Error:err"})
+        res.status(500).json({ msg: "Internal Server Error" });
     }
-})
+});
 
 module.exports = {
     userRouter
